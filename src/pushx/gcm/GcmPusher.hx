@@ -65,7 +65,8 @@ class GcmPusher<Data> implements pushx.Pusher<Data> {
 				new HeaderField('Content-Type', 'application/json'),
 				new HeaderField('Content-Length', Std.string(json.length)),
 				new HeaderField('Authorization', 'key=$key'),
-			]
+			],
+			body: json,
 		})
 			.all()
 			.next(function(res) return Error.catchExceptions(Json.parse.bind(res.body)));
