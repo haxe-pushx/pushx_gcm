@@ -6,7 +6,7 @@ import tink.http.Fetch.*;
 
 using tink.CoreApi;
 
-class GcmPusher<Data> implements pushx.Pusher<Data> {
+class GcmPusher<Data:{}> implements pushx.Pusher<Data> {
 	
 	var url = 'https://gcm-http.googleapis.com/gcm/send';
 	var key:String;
@@ -69,6 +69,12 @@ class GcmPusher<Data> implements pushx.Pusher<Data> {
 			body: json,
 		})
 			.all()
-			.next(function(res) return Error.catchExceptions(Json.parse.bind(res.body)));
+			.next(function(res) {
+				return try {
+					Success(Json.parse(res.body));
+				} catch(e:Dynamic) {
+					Failure(new Error(UnprocessableEntity, '$e - source: ${res.body}'));
+				}
+			});
 	}
 }
