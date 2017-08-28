@@ -1,4 +1,0 @@
--D pushx.fcm
--cp src
--lib pushx.core
--lib tink_http_fetch
