@@ -1,5 +1,6 @@
 package pushx.gcm;
 
+import haxe.io.Bytes;
 import haxe.Json;
 import tink.http.Header;
 import tink.http.Fetch.*;
@@ -58,15 +59,16 @@ class GcmPusher<Data:{}> implements pushx.Pusher<Data> {
 	
 	function send(payload:Payload):Promise<Response> {
 		var json = Json.stringify(payload);
+		var body = Bytes.ofString(json);
 		
 		return fetch(url, {
 			method: POST,
 			headers: [
 				new HeaderField('Content-Type', 'application/json'),
-				new HeaderField('Content-Length', Std.string(json.length)),
+				new HeaderField('Content-Length', Std.string(body.length)),
 				new HeaderField('Authorization', 'key=$key'),
 			],
-			body: json,
+			body: body,
 		})
 			.all()
 			.next(function(res) {
